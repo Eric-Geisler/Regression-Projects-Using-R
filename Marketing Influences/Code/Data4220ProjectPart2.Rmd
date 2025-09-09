@@ -1,0 +1,80 @@
+---
+title: "Data4220ProjectPart2"
+author: "Eric Geisler"
+date: "2024-05-01"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+df = read.csv("campaign_responses.csv")
+df = na.omit(df)
+```
+
+```{r}
+df$Response <- ifelse(df$responded == "Yes", 1, 0)
+df$Gender <- ifelse(df$gender == "Female", 1, 0)
+df$Income_log <- log(df$annual_income)
+```
+
+```{r}
+df
+```
+
+# Data Visualization
+
+```{r}
+ggplot(df, aes(x = gender, fill = responded)) +
+  geom_bar() +
+  labs(x = "Gender", y = "Count", fill = "Response") +
+  ggtitle("Distribution of Response by Gender")
+```
+WE WILL NOT BE USING GENDER
+
+
+```{r}
+ggplot(df, aes(x = responded, y = age)) +
+  geom_boxplot(fill = "orange", color = "black") +
+  labs(x = "Response", y = "Age") +
+  ggtitle("Distribution of Age by Response")
+```
+
+```{r}
+ggplot(df, aes(x = responded, y = annual_income)) +
+  geom_boxplot(fill = "yellow", color = "black") +
+  labs(x = "Response", y = "Annual Income") +
+  ggtitle("Distribution of Annual Income by Response")
+```
+
+
+
+```{r}
+ggplot(df, aes(x = as.factor(no_of_children), fill = responded)) +
+  geom_bar() +
+  labs(x = "Number of Children", y = "Count", fill = "Response") +
+  ggtitle("Response Distribution by Number of Children")
+```
+
+# Model (all predictors)
+
+```{r}
+model = glm(Response~no_of_children, data = df, family = binomial)
+summary(model)
+```
+
+
+
+
+
+
+
+
+
+
